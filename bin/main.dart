@@ -24,24 +24,27 @@ List<List<String>> accountsMerge(List<List<String>> accounts) {
   List<List<String>> newList = [];
   List<List<String>> commons = [];
   for (int i = 0; i < accounts.length; i++) {
-    for (int j = i + 1; j < accounts.length; j++) {
-      if (haveCommonMails(accounts[i], accounts[j])) {
-        commons.add(accounts[i]);
-        commons.add(accounts[j]);
-        accounts[j] = [accounts[i][0]];
-        accounts[i] = addCommonMailsWithUser(commons);
+    for (int j = 0; j < accounts.length; j++) {
+      if (i != j) {
+        if (haveCommonMails(accounts[i], accounts[j])) {
+          commons.add(accounts[i]);
+          commons.add(accounts[j]);
+          accounts[i] = addCommonMailsWithUser(commons);
+          accounts[j] = [accounts[i][0]];
+          commons.clear();
+        }
       }
-    }
-    if (commons.isEmpty && accounts[i].length > 1) {
-      commons.add(accounts[i]);
-    }
-    if (commons.isNotEmpty) {
-      newList.add(addCommonMailsWithUser(commons));
     }
     commons = [];
   }
-  print(newList);
-  return newList;
+  newList = List.from(accounts);
+  newList.forEach((user) {
+    if (user.length <= 1) {
+      accounts.remove(user);
+    }
+  });
+  print(accounts);
+  return accounts;
 }
 
 bool haveCommonMails(List<String> list1, List<String> list2) {
@@ -77,14 +80,9 @@ main() {
     ["Mary", "mary@mail.com"]
   ]);
   accountsMerge([
-    ['john', 'a', 'b'],
-    ['john', 'a', 'b'],
-    ['john', 'a', 'b'],
-    ['john', 'b', 'c'],
-    ['john', 'c', 'd'],
-    ['john', 'e', 'd'],
-    ['john', 'e', 'f'],
-    ["Mary", "mary@mail.com"]
+    ['john', 'a', 'b'], ['john', 'b', 'c'],
 
+    ['john', 'c', 'd'],
+    //john
   ]);
 }
