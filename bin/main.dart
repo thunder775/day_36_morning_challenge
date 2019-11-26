@@ -21,28 +21,18 @@
 /// Output: [["John", 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com'],
 /// ["John", "johnnybravo@mail.com"], ["Mary", "mary@mail.com"]]
 List<List<String>> accountsMerge(List<List<String>> accounts) {
-  List<List<String>> newList = [];
-  List<List<String>> commons = [];
   for (int i = 0; i < accounts.length; i++) {
     for (int j = 0; j < accounts.length; j++) {
       if (i != j) {
         if (haveCommonMails(accounts[i], accounts[j])) {
-          commons.add(accounts[i]);
-          commons.add(accounts[j]);
-          accounts[i] = addCommonMailsWithUser(commons);
-          accounts[j] = [accounts[i][0]];
-          commons.clear();
+          accounts[i] = addCommonMailsWithUser(accounts[i], accounts[j]);
+          accounts.removeAt(j);
+          j=0;
         }
       }
     }
-    commons = [];
   }
-  newList = List.from(accounts);
-  newList.forEach((user) {
-    if (user.length <= 1) {
-      accounts.remove(user);
-    }
-  });
+
   print(accounts);
   return accounts;
 }
@@ -58,19 +48,24 @@ bool haveCommonMails(List<String> list1, List<String> list2) {
   return false;
 }
 
-List addCommonMailsWithUser(List<List<String>> list) {
+List addCommonMailsWithUser(List<String> list1, List<String> list2) {
   List<String> commonMails = [];
-  list.forEach((user) {
-    user.forEach((email) {
-      if (user.indexOf(email) != 0 && !(commonMails.contains(email))) {
-        commonMails.add(email);
-      }
-    });
+  list1.forEach((mails) {
+    if (list1.indexOf(mails) != 0 && !(commonMails.contains(mails))) {
+      commonMails.add(mails);
+    }
+  });
+  list2.forEach((mails) {
+    if (list2.indexOf(mails) != 0 && !(commonMails.contains(mails))) {
+      commonMails.add(mails);
+    }
   });
   commonMails.sort();
-  commonMails.insert(0, list[0][0]);
+  commonMails.insert(0, list1[0]);
   return commonMails;
 }
+
+
 
 main() {
   accountsMerge([
@@ -80,9 +75,16 @@ main() {
     ["Mary", "mary@mail.com"]
   ]);
   accountsMerge([
-    ['john', 'a', 'b'], ['john', 'b', 'c'],
-
+    ['john', 'a', 'b'],
+    ['john', 'b', 'c'],
     ['john', 'c', 'd'],
-    //john
+  ]);
+
+  accountsMerge([
+    ['john', 'a', 'b'],
+    ['john', 'c', 'd'],
+    ['john', 'b', 'c'],
+    ['john', 'e', 'd'],
+    ['john', 'e', 'f'],
   ]);
 }

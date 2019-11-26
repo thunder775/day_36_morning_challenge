@@ -25,8 +25,6 @@ void main() {
     expect(
         accountsMerge([
           ['john', 'a', 'b'],
-          ['john', 'a', 'b'],
-          ['john', 'a', 'b'],
           ['john', 'c', 'd'],
           ['john', 'b', 'c'],
           ['john', 'e', 'd'],
